@@ -1,16 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using RpgApi.Models;
 using RpgApi.Models.Enuns;
 
-namespace RpgApi.Controllers
-{
 namespace RpgApi.Controllers
 {
     [ApiController]
@@ -19,7 +13,6 @@ namespace RpgApi.Controllers
     {
         private static List<Personagem> personagens = new List<Personagem>()
         {
-            //Personagens aqui
             new Personagem() { Id = 1, Nome = "Frodo", PontosVida=100, Forca=17, Defesa=23, Inteligencia=33, Classe=ClasseEnum.Cavaleiro},
             new Personagem() { Id = 2, Nome = "Sam", PontosVida=100, Forca=15, Defesa=25, Inteligencia=30, Classe=ClasseEnum.Cavaleiro},
             new Personagem() { Id = 3, Nome = "Galadriel", PontosVida=100, Forca=18, Defesa=21, Inteligencia=35, Classe=ClasseEnum.Clerigo },
@@ -29,46 +22,73 @@ namespace RpgApi.Controllers
             new Personagem() { Id = 7, Nome = "Radagast", PontosVida=100, Forca=25, Defesa=11, Inteligencia=35, Classe=ClasseEnum.Mago }
         };
     
-    [HttpGet("GetByNome")]
-    public IActionResult GetByNome(String nome)
-            {
-             List <Personagem> listaBusca = personagens.FindAll(p => p.Nome == nome );
+        [HttpGet("GetByNome")]
+        public IActionResult GetByNome(string nome)
+        {
+            List<Personagem> listaBusca = personagens.FindAll(p => p.Nome.Equals(nome, StringComparison.OrdinalIgnoreCase));
 
-              return NotFound ($"Personagem não encontrado");  
+            if (listaBusca.Count > 0)
+            {
+                return Ok(listaBusca);
             }
 
-                [HttpGet("GetClerigoMago")]
-   
-            
+            return NotFound("Personagem não encontrado");  
+        }
 
-            [HttpGet("GetEstatisticas")]
-    public IActionResult GetEstatisticas()
+        [HttpGet("GetClerigoMago")]
+        public IActionResult GetClerigoMago()
+        {
+            List<Personagem> lista = personagens.FindAll(p => p.Classe == ClasseEnum.Clerigo || p.Classe == ClasseEnum.Mago);
+            return Ok(lista.OrderByDescending(p => p.Inteligencia));
+        }
+
+        [HttpGet("GetEstatisticas")]
+        public IActionResult GetEstatisticas()
+        {
+            int quantidade = personagens.Count;
+            int somatorioForca = personagens.Sum(p => p.Forca);
+            double mediaInteligencia = personagens.Average(p => p.Inteligencia);
+
+            var estatisticas = new
             {
-              return Ok();
-            }
+                TotalPersonagens = quantidade,
+                SomatorioForca = somatorioForca,
+                MediaInteligencia = mediaInteligencia
+            };
+
+            return Ok(estatisticas);
+        }
 
         [HttpPost]
-    public IActionResult PostValidacao()
+        public IActionResult PostValidacao(Personagem novoPersonagem)
+        {
+            if (novoPersonagem.Forca > 100)
             {
-              return Ok();
+                return BadRequest("A força do personagem não pode ser maior do que 100.");
             }
 
-             [HttpPost]
-    public IActionResult PostValidacaoMago()
+            personagens.Add(novoPersonagem);
+            return Ok(personagens);
+        }
+
+        [HttpPost("PostValidacaoMago")]
+        public IActionResult PostValidacaoMago(Personagem novoPersonagem)
+        {
+            if (novoPersonagem.Classe == ClasseEnum.Mago && novoPersonagem.Inteligencia < 35)
             {
-              return Ok();
+                return BadRequest("Personagens da classe Mago precisam ter Inteligência igual ou superior a 35.");
             }
 
-             [HttpGet("GetByClasse")]
-    public IActionResult GetByClasse()
-            {
-              return Ok();
-            }
+            personagens.Add(novoPersonagem);
+            return Ok(personagens);
+        }
 
-
-
-
-
+        [HttpGet("GetByClasse/{classe}")]
+        public IActionResult GetByClasse(int classe)
+        {
+            ClasseEnum classeEnum = (ClasseEnum)classe;
+            List<Personagem> lista = personagens.FindAll(p => p.Classe == classeEnum);
+            return Ok(lista);
+        }
     }
-}
 }

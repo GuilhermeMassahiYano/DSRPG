@@ -196,3 +196,4 @@ D:\Guilherme.y\DSII\Aula06\RpgApi\obj\Debug\net10.0\swae.build.ex.cache
 D:\Guilherme.y\DSII\Aula06\RpgApi\obj\Debug\net10.0\RpgApi.csproj.Up2Date
 D:\Guilherme.y\DSII\Aula06\RpgApi\obj\Debug\net10.0\RpgApi.genruntimeconfig.cache
 D:\Guilherme.y\DSII\Aula06\RpgApi\obj\Debug\net10.0\ref\RpgApi.dll
+D:\Guilherme.y\DSII\Aula06\RpgApi\obj\Debug\net10.0\RpgApi.sourcelink.json
