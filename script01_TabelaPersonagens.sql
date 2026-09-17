@@ -39,3 +39,4 @@ VALUES (N'20260910004649_InitialCreate', N'10.0.12');
 COMMIT;
 GO
 
+workstation id=DB-DS-Yano.mssql.somee.com;packet size=4096;user id=saYano;pwd=*123456HAS*;data source=DB-DS-Yano.mssql.somee.com;persist security info=False;initial catalog=DB-DS-Yano;TrustServerCertificate=True

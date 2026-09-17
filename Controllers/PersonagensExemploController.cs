@@ -73,8 +73,14 @@ namespace RpgApi.Controllers
             List<Personagem> listaBusca = personagens.FindAll(p => p.Classe == enumDigitado);
 
             return Ok(listaBusca);    
-            
-        }
+        } 
+        
+
+
+   
+
+
         }
 }
+
 
